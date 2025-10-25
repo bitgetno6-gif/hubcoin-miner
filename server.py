@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import threading  # <-- ১. থ্রেডিং মডিউল ইম্পোর্ট করা হয়েছে
 from datetime import date
 from dotenv import load_dotenv
 
@@ -14,7 +15,7 @@ import telegram
 from telegram import Update, WebAppInfo, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, ContextTypes
 
-# --- 1. প্রাথমিক সেটআপ এবং কনফিগারেশন ---
+# --- প্রাথমিক সেটআপ এবং কনফিগারেশন ---
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 load_dotenv()
 
@@ -38,6 +39,7 @@ except Exception as e:
 
 # --- Flask অ্যাপ (Web Service এর জন্য) ---
 app = Flask(__name__, static_folder='static')
+
 # CORS (Cross-Origin Resource Sharing) কনফিগারেশন
 if FRONTEND_URL:
     CORS(app, resources={r"/api/*": {"origins": [FRONTEND_URL]}})
@@ -171,7 +173,7 @@ def get_leaderboard():
         logging.error(f"API Error on /api/leaderboard: {e}")
         return jsonify({"error": "Could not fetch leaderboard"}), 500
 
-# --- Telegram Bot Command Handlers (Worker এর জন্য) ---
+# --- Telegram Bot Command Handlers ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user = update.effective_user
     user_id, username = str(user.id), user.username or user.first_name
@@ -207,20 +209,24 @@ async def update_leaderboard_command(update: Update, context: ContextTypes.DEFAU
         logging.error(f"Leaderboard update failed: {e}")
         await update.message.reply_text(f"❌ Failed to update leaderboard. Error: {e}")
 
-# --- এই অংশটি শুধুমাত্র Worker হিসেবে চালানোর জন্য ---
+# --- বট চালানোর জন্য ফাংশন ---
 def run_bot():
     """টেলিগ্রাম বটটি পোলিং মোডে চালায়।"""
     application = Application.builder().token(BOT_TOKEN).build()
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("updateleaderboard", update_leaderboard_command))
-    logging.info("Starting Telegram bot polling...")
+    logging.info("Starting Telegram bot polling in a separate thread...")
     application.run_polling()
 
-# --- এই অংশটি শুধুমাত্র লোকাল টেস্টিং এর জন্য ---
+# --- মূল পরিবর্তন: বটকে আলাদা থ্রেডে চালানো ---
+# Gunicorn যখন 'app' অবজেক্টটি লোড করবে, তখন এই কোডটিও রান হবে।
+# এটি বটকে একটি ব্যাকগ্রাউন্ড থ্রেডে চালু করে দেবে এবং মূল থ্রেডে Flask অ্যাপ চলতে থাকবে।
+bot_thread = threading.Thread(target=run_bot, daemon=True)
+bot_thread.start()
+logging.info("Bot thread has been initiated and is running in the background.")
+
+# --- লোকাল টেস্টিং এর জন্য ---
 if __name__ == "__main__":
-    # Render Gunicorn ব্যবহার করে 'app' অবজেক্টটি চালাবে।
-    # বটটি আলাদা Worker হিসেবে চালানো হবে।
-    # লোকাল টেস্টিং এর জন্য, আমরা দুটি আলাদা টার্মিনালে চালাবো:
-    # 1. gunicorn server:app
-    # 2. python -c 'from server import run_bot; run_bot()'
-    pass
+    # নিজের কম্পিউটারে টেস্ট করার জন্য `python server.py` কমান্ড দিলে এটি রান হবে।
+    logging.info("Starting Flask development server for local testing...")
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
