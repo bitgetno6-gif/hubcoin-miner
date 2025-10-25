@@ -1,0 +1,182 @@
+:root {
+    --primary-green: #2ecc71;
+    --primary-orange: #f39c12;
+    --background-light: #f4f7f6;
+    --card-bg: #ffffff;
+    --text-dark: #2c3e50;
+    --text-light: #8e959b;
+    --border-color: #e8eaed;
+    --danger-color: #e74c3c;
+}
+
+/* --- বেসিক স্টাইল --- */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    margin: 0;
+    padding: 15px;
+    padding-bottom: 90px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+.app-container {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+svg {
+    stroke-width: 2;
+    stroke: currentColor;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* --- লোডিং ওভারলে --- */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--background-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+}
+
+.spinner {
+    border: 5px solid var(--border-color);
+    border-top: 5px solid var(--primary-green);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --- হেডার --- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.profile-info { display: flex; align-items: center; gap: 12px; }
+.profile-pic { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary-green); object-fit: cover; }
+.profile-info div { display: flex; flex-direction: column; }
+.username { font-weight: 600; font-size: 16px; }
+.pro-badge { background-color: var(--primary-orange); color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 5px; align-self: flex-start; }
+.notification-icon { color: var(--text-dark); }
+
+/* --- পেজ ম্যানেজমেন্ট --- */
+.page { display: none; animation: fadeIn 0.4s ease-in-out; }
+.page.page-active { display: block; }
+.page-title { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+.sub-title { font-size: 18px; font-weight: 600; margin-top: 30px; margin-bottom: 15px; color: var(--text-dark); }
+
+/* --- কার্ড এবং গ্রিড --- */
+.balance-card {
+    background: linear-gradient(45deg, var(--primary-green), #27ae60);
+    color: white; padding: 25px; border-radius: 20px; text-align: center;
+    margin-bottom: 20px; box-shadow: 0 10px 20px rgba(46, 204, 113, 0.2);
+    transition: transform 0.3s ease;
+}
+.balance-card:hover { transform: scale(1.02); }
+.balance-title { font-size: 14px; font-weight: 500; opacity: 0.9; }
+.balance-amount { font-size: 36px; font-weight: 700; margin: 5px 0 0 0; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.stat-item {
+    background-color: var(--card-bg); padding: 20px; border-radius: 15px;
+    display: flex; flex-direction: column; align-items: flex-start;
+    border: 1px solid var(--border-color); transition: all 0.3s ease;
+}
+.stat-item:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(46, 204, 113, 0.07); }
+.stat-icon { color: var(--primary-green); width: 28px; height: 28px; margin-bottom: 10px; }
+.stat-label { font-size: 13px; color: var(--text-light); font-weight: 500; }
+.stat-value { font-size: 20px; font-weight: 600; margin-top: 4px; }
+
+/* --- উইথড্রয়াল টিকার --- */
+.withdrawal-ticker { background-color: var(--card-bg); border-radius: 12px; padding: 12px 0; margin-bottom: 20px; overflow: hidden; white-space: nowrap; border: 1px solid var(--border-color); }
+.ticker-content { display: inline-block; padding-left: 100%; animation: ticker-scroll 20s linear infinite; }
+.ticker-content span { display: inline-block; margin-right: 40px; font-size: 14px; color: var(--text-light); font-weight: 500; }
+@keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+/* --- টাস্ক এবং রেফারেল কার্ড --- */
+.task-card, .ref-card, .gem-claim-card { background-color: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid var(--border-color); margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+.gem-claim-card, .ref-card { flex-direction: column; align-items: flex-start; gap: 10px; }
+.task-info h3, .ref-card h3, .gem-claim-card h3 { margin: 0 0 5px 0; font-size: 16px; font-weight: 600; }
+.task-info p, .ref-card p, .gem-claim-card p { margin: 0; font-size: 14px; color: var(--text-light); line-height: 1.5; }
+.ref-link-wrapper { display: flex; width: 100%; background: var(--background-light); padding: 10px; border-radius: 10px; margin-top: 10px; align-items: center; }
+#ref-link { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; font-size: 14px; }
+.btn-copy { background: var(--primary-green); color: white; border: none; padding: 0 15px; border-radius: 8px; margin-left: 10px; cursor: pointer; font-family: 'Poppins'; height: 35px; }
+
+/* --- প্রোফাইল কার্ড --- */
+.profile-cards-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.profile-card {
+    background-color: var(--card-bg); padding: 20px; border-radius: 15px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; border: 1px solid var(--border-color); cursor: pointer;
+    transition: all 0.3s ease; min-height: 100px;
+}
+.profile-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(46, 204, 113, 0.07); }
+.profile-card svg { width: 28px; height: 28px; color: var(--primary-green); margin-bottom: 10px; }
+.profile-card span { font-size: 14px; font-weight: 500; line-height: 1.3; }
+
+/* --- বাটন --- */
+.btn { border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
+.btn:hover { opacity: 0.9; }
+.btn-primary { background-color: var(--primary-green); color: white; }
+.btn-secondary { background-color: var(--border-color); color: var(--text-dark); }
+.btn-full { width: 100%; }
+.btn:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+
+
+/* --- লিডারবোর্ড --- */
+.leaderboard-container { display: flex; flex-direction: column; gap: 12px; }
+.leaderboard-item { display: flex; align-items: center; background-color: var(--card-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); font-weight: 500; }
+.leaderboard-item .rank { font-size: 16px; font-weight: 700; color: var(--primary-green); width: 30px; }
+.leaderboard-item .username { flex-grow: 1; font-size: 15px; }
+.leaderboard-item .amount { font-size: 16px; font-weight: 600; }
+
+/* --- নেভিগেশন --- */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--card-bg); display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); border-top: 1px solid var(--border-color); max-width: 480px; margin: 0 auto; z-index: 100; }
+.nav-button { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-light); font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 500; cursor: pointer; transition: color 0.3s; }
+.nav-button svg { color: var(--text-light); transition: color 0.3s; width: 24px; height: 24px; }
+.nav-button.active { color: var(--primary-green); } .nav-button.active svg { color: var(--primary-green); }
+
+/* --- উইথড্রয়াল মডাল --- */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1001; opacity: 0; transition: opacity 0.3s ease; }
+.modal-content { background: var(--background-light); padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; transform: scale(0.9); transition: transform 0.3s ease; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; }
+.modal-header h2 { margin: 0; font-size: 20px; }
+.close-button { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-light); }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 10px; font-size: 14px; }
+.form-group input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 16px; box-sizing: border-box; }
+
+.payment-methods { display: flex; gap: 10px; }
+.payment-btn { flex-grow: 1; background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; font-family: 'Poppins', sans-serif; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+.payment-btn.active { background: var(--primary-green); color: white; border-color: var(--primary-green); box-shadow: 0 4px 10px rgba(46, 204, 113, 0.2); }
+
+.amount-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.amount-btn { background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; font-family: 'Poppins', sans-serif; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+.amount-btn.active { background: var(--primary-green); color: white; border-color: var(--primary-green); }
+
+.gem-req-msg {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 8px;
+    text-align: center;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

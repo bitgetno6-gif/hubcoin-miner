@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     tg.expand();
 
     // API Base URL টি আপনার Render Backend URL অনুযায়ী সেট করা হয়েছে।
-    const API_BASE_URL = '/api'; 
+    const API_BASE_URL = 'https://hubcoin-tuft.onrender.com/api'; 
     // ⚠️ আপনার টেলিগ্রাম বটের ইউজারনেম দিন
     const BOT_USERNAME = 'HubCoin_minerbot'; 
 
